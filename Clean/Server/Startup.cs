@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Clean.Server
 {
@@ -27,7 +28,9 @@ namespace Clean.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            Connection = Configuration.GetConnectionString("EmployeeDatabase");
+            // https://azure.microsoft.com/en-us/blog/windows-azure-web-sites-how-application-strings-and-connection-strings-work/
+            Connection = Environment.GetEnvironmentVariable("SQLAZURECONNSTR_EmployeeDatabase");
+            //Connection = Configuration.GetConnectionString("EmployeeDatabase");
             services.AddDbContext<ManagementContext>(options => options.UseSqlServer(Connection));
             services.AddScoped<IEmployeAccessLayer, EmployeAccessLayer>();
 
